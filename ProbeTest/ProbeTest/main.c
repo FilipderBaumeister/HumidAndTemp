@@ -14,15 +14,15 @@
 
 // Einbinden von Standardbibliotheken
 #include <time.h> // Zeitfunktionen
-#include <avr/io.h> // I/O Funktionen für AVR Mikrocontroller
-#include <util/delay.h> // Verzögerungsfunktionen
+#include <avr/io.h> // I/O Funktionen fÃ¼r AVR Mikrocontroller
+#include <util/delay.h> // VerzÃ¶gerungsfunktionen
 
 
 // Deklarieren und initialisieren
 //////////////////////////////////////////////////////////////////////////
 volatile uint8_t buttons = 0xff;
-volatile uint32_t counter = 0; // counter zum hochzählen um das menü zu verlassen
-volatile int i1=0,i2 = 0,ledstatus,abfrage = 1,zeithochzaehlen = 0,anzeige = 0 ,ledgruen = 0b01111111, ledgelb = 0b10111111, ledrot = 0b11011111, ledP4 = 0b11110111; // Leds werden durch ein low geschaltet. Ledstatus ist der rückgabevariable. i1 ein übergabevariable
+volatile uint32_t counter = 0; // counter zum hochzÃ¤hlen um das menÃ¼ zu verlassen
+volatile int i1=0,i2 = 0,ledstatus,abfrage = 1,zeithochzaehlen = 0,anzeige = 0 ,ledgruen = 0b01111111, ledgelb = 0b10111111, ledrot = 0b11011111, ledP4 = 0b11110111; // Leds werden durch ein low geschaltet. Ledstatus ist der rÃ¼ckgabevariable. i1 ein Ã¼bergabevariable
 volatile double adctemp= 0.0, adchumid =0.0; 
 char timeString[30], timeString1[30]; time_t rawtime[8],wptnow;
 time_t rawtime1[8],wptnow1;
@@ -40,8 +40,8 @@ void einlesentempandhumid()
 int checkhumidandtemp(double x, double y) // Abfrage der Humid und Temperatur
 {
 	
-	//für das erste wertepaar
-	struct tm wp,wp1; // Struktur für aktuelle Zeit 
+	//fÃ¼r das erste wertepaar
+	struct tm wp,wp1; // Struktur fÃ¼r aktuelle Zeit 
 	wp.tm_hour = 04; // 12:00:00 
 	wp.tm_min = 59;
 	wp.tm_sec = 59;
@@ -50,14 +50,14 @@ int checkhumidandtemp(double x, double y) // Abfrage der Humid und Temperatur
 	wp1.tm_sec = 31;
 	
 	
-	if(((x >= 20)&&(x<= 22))&&((y>= 40)&&(y<= 60))) // Abfrage für den optimalen Bereich 
+	if(((x >= 20)&&(x<= 22))&&((y>= 40)&&(y<= 60))) // Abfrage fÃ¼r den optimalen Bereich 
 	{ 
 		
-		ledstatus = ledgruen; // led wird grün 
+		ledstatus = ledgruen; // led wird grÃ¼n 
 		
 	}
 	
-    else if(((((x < 20) && (x >= 16)) || ((x > 22) && (x <= 26))) && ((y >= 30) && (y <= 70))) || ((((y < 40) && (y >= 30)) || ((y > 60) && (y <= 70))) && ((x < 26) && (x > 16)))) // Abfrage für den toleriert Bereich
+    else if(((((x < 20) && (x >= 16)) || ((x > 22) && (x <= 26))) && ((y >= 30) && (y <= 70))) || ((((y < 40) && (y >= 30)) || ((y > 60) && (y <= 70))) && ((x < 26) && (x > 16)))) // Abfrage fÃ¼r den toleriert Bereich
 	{
 		
 		if(ledstatus == ledrot) // abfrage ob die LED davor rot war damit er dann in den zweiten Messwert speichern tut
@@ -81,7 +81,7 @@ int checkhumidandtemp(double x, double y) // Abfrage der Humid und Temperatur
 		 ledstatus = ledgelb;  // led wird gelb
 	} 
 	
-	else if (((x<16)||(y<30)||(x>26)||(y>70)) && (ledstatus == ledgelb)) // Abfrage für den roten Bereich und den überschritt in den roten bereich durch abfrage  ledstatus 
+	else if (((x<16)||(y<30)||(x>26)||(y>70)) && (ledstatus == ledgelb)) // Abfrage fÃ¼r den roten Bereich und den Ã¼berschritt in den roten bereich durch abfrage  ledstatus 
 	{
 		
 		wptnow = mktime(&wp);
@@ -103,15 +103,16 @@ int checkhumidandtemp(double x, double y) // Abfrage der Humid und Temperatur
 	{
 		
 		ledstatus = ledstatus & ledP4;
-				
+		
+		PORTD |= (1 << PD6);		
 	}
 	else
 	{ 	
 		
-		ledstatus= ledrot; // wen nichts stimmt soll die led rot werden überprüfen bzw. Erschuetterung ist 
+		ledstatus= ledrot; // wen nichts stimmt soll die led rot werden Ã¼berprÃ¼fen bzw. Erschuetterung ist 
 		
 	} 
-	return ledstatus; // rückgabewert
+	return ledstatus; // rÃ¼ckgabewert
 	
 }
 //////////////////////////////////////////////////////////////////////////
@@ -184,7 +185,7 @@ void buttonCheck(uint32_t button)
 		break;
 
 		case 0b11111011:
-		// Wenn der Button-Wert 0b11111011 ist, führen wir eine Reihe Funktionen aus.
+		// Wenn der Button-Wert 0b11111011 ist, fÃ¼hren wir eine Reihe Funktionen aus.
 		
 		while (zeithochzaehlen <= 4)
 		{
@@ -202,7 +203,7 @@ void buttonCheck(uint32_t button)
 
 			if (buttons == 0b11110111)
 			{
-				// Wenn die Buttons den Wert 0b11110111 haben, erhöhen wir zeithochzaehlen und setzen den Counter zurück.
+				// Wenn die Buttons den Wert 0b11110111 haben, erhÃ¶hen wir zeithochzaehlen und setzen den Counter zurÃ¼ck.
 				zeithochzaehlen++;
 				counter = 0;
 				_delay_ms(250);
@@ -243,7 +244,7 @@ void buttonCheck(uint32_t button)
 
 		while ((buttons != 0b11011111) && (buttons != 0b11101111))
 		{
-			// Eine weitere Schleife, die läuft, solange die Buttons nicht 0b11011111 oder 0b11101111 sind.
+			// Eine weitere Schleife, die lÃ¤uft, solange die Buttons nicht 0b11011111 oder 0b11101111 sind.
 			lcd_init();
 			
 			buttons = pcf8574_get_inputs(0x20);
@@ -259,7 +260,7 @@ void buttonCheck(uint32_t button)
 
 		if (buttons == 0b11101111)
 		{
-			// Wenn die Buttons den Wert 0b11101111 haben, setzen wir zeithochzaehlen zurück und löschen die Zeitarrays.
+			// Wenn die Buttons den Wert 0b11101111 haben, setzen wir zeithochzaehlen zurÃ¼ck und lÃ¶schen die Zeitarrays.
 			
 			for (int i = 0; i <= 5; i++)
 			{
@@ -271,7 +272,7 @@ void buttonCheck(uint32_t button)
 		}
 		else if (buttons == 0b11011111)
 		{
-			// Wenn die Buttons den Wert 0b11011111 haben, setzen wir nur zeithochzaehlen zurück.
+			// Wenn die Buttons den Wert 0b11011111 haben, setzen wir nur zeithochzaehlen zurÃ¼ck.
 			anzeige = 0,zeithochzaehlen = 0;
 		}
 
@@ -279,7 +280,7 @@ void buttonCheck(uint32_t button)
 
 		default:
 		
-		// Wenn der Button-Wert keiner der oben genannten ist, führen wir eine Reihe von Operationen aus.
+		// Wenn der Button-Wert keiner der oben genannten ist, fÃ¼hren wir eine Reihe von Operationen aus.
 		checkVibration();
 		
 		einlesentempandhumid();
@@ -302,6 +303,12 @@ int main(void)
 	//////////////////////////////////////////////////////////////////////////
 	PORTD |= PIND7;	// setzt den Pin des Port D auf high 
 	DDRD |= PD7; // PD7 als Ausgang 
+	// Setze PD6 als Ausgang
+	DDRD |= (1 << PD6);
+
+	// Setze PD6 standardmÃ¤ÃŸig auf LOW
+	PORTD &= ~(1 << PD6);
+	
 	//////////////////////////////////////////////////////////////////////////
 	
 	adc_init(); // Analog digital COnverter initialiseren 
