@@ -1,5 +1,7 @@
 # HumidAndTemp
 
+EIS Sommer2023 Prüfung mit Libary's und funktionieren Programmcode
+
 ! Es kommen jetzt erstmal die Funktionen die Main ist ganz unten !
 
 ## Einbinden der Libarys
